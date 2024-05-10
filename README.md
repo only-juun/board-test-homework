@@ -162,3 +162,80 @@ mockMvc.perform(get("/api/admin/users")
     - `400 Bad Request` : 게시글이 존재하는 카테고리를 수정하는 경우
     - `403 Forbidden` : 관리자 권한 없이 관리자 권한 접근
     - `404 Not Found` : 미존재 카테고리 수정하는 경우
+
+
+## 게시글 기능 (담당 : [only-juun](https://github.com/only-juun))
+
+1. **게시글 삭제 - 관리자**
+- 목적 : `관리자`가 `게시글을 삭제`할 수 있다.
+- Request : `DELETE /posts/{postId}`
+- ADMIN 권한이 존재해야 한다.
+- Method Return Type (JSON)
+    - 성공 시 응답 예시 : `{ "status" : 200, "postId" : "1234" }`
+- Possible Errors
+    - Id 형식이 잘못된 경우 : `{ "status" : 400, "error" : 잘못된 게시글 번호 형식입니다. 게시글 번호는 숫자여야 합니다.}`
+    - 해당 Id를 가진 게시글이 없는 경우 : `{ "status" : 404, "error" : 해당 게시물을 찾을 수 없습니다. 게시글 번호를 다시 확인 바랍니다.}`
+    - 삭제할 수 있는 관리자 권한이 없는 경우 : `{ "status" : 403, "error" : “이 게시글을 삭제할 권한이 없습니다. 관리자에게 문의 바랍니다.” }`
+
+2. **게시글 수정 - 관리자**
+- 목적 : `관리자`가 `게시글을 수정`할 수 있다.
+- Request : `PATCH /posts/{postId}`
+- Requset Body
+    - `title` : String, 카테고리 이름
+        - `@NotBlank(message = "제목은 반드시 작성해야 합니다.")`
+        - `@Size(min = 2, max = 20, message = "제목은 최소 2자 이상 20자 이하로 작성해야 합니다.")`
+    - `content` : String, 카테고리 설명
+        - `@Size(max = 500, message = "본문은 최대 500자 까지 적을 수 있습니다.")`
+        - `@NotBlank(message = "본문은 반드시 작성해야 합니다.`
+- ADMIN 권한이 존재해야 한다.
+- Method Return Type (JSON)
+    - 성공 시 응답 예시 : `{ "status" : 200, "postId" : "1234", "title" : "제목", "content" : "본문" }`
+- Possible Errors
+    - Id 형식이 잘못된 경우 : `{ "status" : 400, "error" : 잘못된 게시글 번호 형식입니다. 게시글 번호는 숫자여야 합니다.}`
+    - 해당 Id를 가진 게시글이 없는 경우 : `{ "status" : 404, "error" : 해당 게시물을 찾을 수 없습니다. 게시글 번호를 다시 확인 바랍니다.}`
+    - 수정할 수 있는 관리자 권한이 없는 경우 : `{ "status" : 403, "error" : “이 게시글을 수정할 권한이 없습니다. 관리자에게 문의 바랍니다.” }`
+
+3. **게시글 삭제 - 사용자**
+- 목적 : `사용자`가 `게시글을 삭제`할 수 있다.
+- Request : `DELETE /posts/{postId}`
+- MEMBER 권한이 존재해야 한다.
+- Method Return Type (JSON)
+    - 성공 시 응답 예시 : `{ "status" : 200, "postId" : "1234" }`
+- Possible Errors
+    - Id 형식이 잘못된 경우 : `{ "status" : 400, "error" : 잘못된 게시글 번호 형식입니다. 게시글 번호는 숫자여야 합니다.}`
+    - 해당 Id를 가진 게시글이 없는 경우 : `{ "status" : 404, "error" : 해당 게시물을 찾을 수 없습니다. 게시글 번호를 다시 확인 바랍니다.}`
+    - 삭제할 수 있는 사용자 권한이 없는 경우 : `{ "status" : 403, "error" : “이 게시글을 삭제할 권한이 없습니다. 관리자에게 문의 바랍니다.” }`
+
+4. **게시글 수정 - 사용자**
+- 목적 : `사용자`가 `게시글을 수정`할 수 있다.
+- Request : `PATCH /posts/{postId}`
+- Requset Body
+    - `title` : String, 카테고리 이름
+        - `@NotBlank(message = "제목은 반드시 작성해야 합니다.")`
+        - `@Size(min = 2, max = 20, message = "제목은 최소 2자 이상 20자 이하로 작성해야 합니다.")`
+    - `content` : String, 카테고리 설명
+        - `@Size(max = 500, message = "본문은 최대 500자 까지 적을 수 있습니다.")`
+        - `@NotBlank(message = "본문은 반드시 작성해야 합니다.`
+- MEMBER 권한이 존재해야 한다.
+- Method Return Type (JSON)
+    - 성공 시 응답 예시 : `{ "status" : 200, "postId" : "1234", "title" : "제목", "content" : "본문" }`
+- Possible Errors
+    - Id 형식이 잘못된 경우 : `{ "status" : 400, "error" : 잘못된 게시글 번호 형식입니다. 게시글 번호는 숫자여야 합니다.}`
+    - 해당 Id를 가진 게시글이 없는 경우 : `{ "status" : 404, "error" : 해당 게시물을 찾을 수 없습니다. 게시글 번호를 다시 확인 바랍니다.}`
+    - 수정할 수 있는 사용자 권한이 없는 경우 : `{ "status" : 403, "error" : “이 게시글을 수정할 권한이 없습니다. 관리자에게 문의 바랍니다.” }`
+
+5. **게시글 작성 - 사용자**
+- 목적 : `사용자`가 `게시글을 작성`할 수 있다.
+- Request : `POST /posts`
+- MEMBER 권한이 존재해야 한다.
+- Requset Body
+    - `title` : String, 카테고리 이름
+        - `@NotBlank(message = "제목은 반드시 작성해야 합니다.")`
+        - `@Size(min = 2, max = 20, message = "제목은 최소 2자 이상 20자 이하로 작성해야 합니다.")`
+    - `content` : String, 카테고리 설명
+        - `@Size(max = 500, message = "본문은 최대 500자 까지 적을 수 있습니다.")`
+        - `@NotBlank(message = "본문은 반드시 작성해야 합니다.`
+- Method Return Type (JSON)
+    - 성공 시 응답 예시 : `{ "status" : 200, "postId" : "1234" }`
+- Possible Errors
+    - 작성할 수 있는 사용자 권한이 없는 경우 : `{ "status" : 403, "error" : “게시글을 작성할 권한이 없습니다. 관리자에게 문의 바랍니다.” }`
